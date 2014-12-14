@@ -1,4 +1,4 @@
-from model import Model
+from model import Model, Point
 from random_search import RandomSearch
 
 
@@ -13,8 +13,8 @@ if __name__ == '__main__':
         [1, 1, 0, 0, 0]
     ]
     n_turns = 8
-    start = (3, 4)  # x, y
-    finish = (0, 1)
+    start = Point(3, 4)  # x, y
+    finish = Point(0, 1)
 
     iterations = 100
     model = Model(terrain_map, n_turns, start, finish)
