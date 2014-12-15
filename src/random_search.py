@@ -1,6 +1,7 @@
-from engine import Engine
+from src.engine import Engine
 from random import randrange
-from model import Point
+from src.model import Point
+
 
 class RandomSearch(Engine):
 
@@ -8,11 +9,10 @@ class RandomSearch(Engine):
         pass
 
     def solve(self, iterations):
-        it = 0
         best_fitness = float('inf')
         best_solution = []
         for it in range(iterations):
-            solution = [Point(randrange(self._model.max_x), randrange(self._model.max_y)) for dim in self.dims]
+            solution = [Point(randrange(self._model.max_x), randrange(self._model.max_y)) for _ in self._dims]
             fitness = self._model.get_fitness(solution)
             if fitness > best_fitness:
                 best_fitness = fitness
