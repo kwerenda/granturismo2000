@@ -35,6 +35,57 @@ class Model(object):
 
         return time_segments + time_turns
 
+    @staticmethod
+    def _discrete_line(start_point, end_point):
+        """
+        vision line algorithm
+        :return: list of points creating discrete line
+        """
+
+        x = start_point.x
+        y = start_point.y
+        result = [start_point]
+        dx = end_point.x - start_point.x
+        dy = end_point.y - start_point.y
+        y_step = 1 if dy >= 0 else -1
+        dy = -dy if dy < 0 else dy
+        x_step = 1 if dx >= 0 else -1
+        dx = -dx if dx < 0 else dx
+        ddx = 2 * dx
+        ddy = 2 * dy
+        if ddx >= ddy:
+            errorprev = error = dx
+            for i in range(0, dx):
+                x += x_step
+                error += ddy
+                if error > ddx:
+                    y += y_step
+                    error -= ddx
+                    if error + errorprev < ddx:
+                        result.append(Point(x, y - y_step))
+                    elif error + errorprev > ddx:
+                        result.append(Point(x - x_step, y))
+                    else:
+                        pass
+                result.append(Point(x, y))
+                errorprev = error
+        else:
+            errorprev = error = dy
+            for i in range(0, dy):
+                y += y_step
+                error += ddx
+                if error > ddy:
+                    x += x_step
+                    error -= ddy
+                    if error + errorprev < ddy:
+                        result.append(Point(x - x_step, y))
+                    elif error + errorprev > ddy:
+                        result.append(Point(x, y - y_step))
+                    else:
+                        pass
+                result.append(Point(x, y))
+                errorprev = error
+        return result
 
     @staticmethod
     def _angle(segment1, segment2):
@@ -75,3 +126,6 @@ class Point:
     @staticmethod
     def dist(p1, p2):
         return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
