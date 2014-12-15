@@ -12,7 +12,13 @@ map  = [
 start = {x: 3, y:4 };
 end = {x: 0, y:1 };
 
-route = [{x:3, y:4}, {x:3, y:1}, {x:2, y:0}, {x:1, y:0}, {x:0, y:1}];
+route1 = [{x:3, y:4}, {x:3, y:1}, {x:2, y:0}, {x:1, y:0}, {x:0, y:1}];
+route2 = [{x:4,y:4},
+{x:2,y:4},
+{x:4,y:0}];
+route = [{x:2,y:0},
+{x:2,y:1},
+{x:2,y:1}];
 
 game = new Phaser.Game(gameBorder, gameBorder, Phaser.CANVAS, 'visualization', {}, true);
 
@@ -55,13 +61,14 @@ function drawRoute() {
         game.context.strokeStyle = 'rgb(30,90,30)';
         game.context.lineWidth = 8;
         game.context.beginPath();
-        game.context.moveTo(route[0].x*scaledMapGrid + scaledMapGrid/2, route[0].y*scaledMapGrid + scaledMapGrid/2);
+        game.context.moveTo(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2);
 //        shape.moveTo(route[0].x*scaledMapGrid + scaledMapGrid/2, route[0].y*scaledMapGrid + scaledMapGrid/2);
 //        shape.lineStyle(2, 0x0000FF, 1); // width, color (0x0000FF), alpha (0 -> 1) // required settings
 //        shape.beginFill(0xFFFF0B, 1); // color (0xFFFF0B), alpha (0 -> 1) // required settings
         for (var vert = 1; vert < route.length; vert++) {
             game.context.lineTo(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2)
         }
+        game.context.lineTo(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2);
 //        shape.endFill();
         game.context.stroke();
         game.context.closePath();

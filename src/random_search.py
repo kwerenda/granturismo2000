@@ -12,7 +12,7 @@ class RandomSearch(Engine):
         best_fitness = float('inf')
         best_solution = []
         for it in range(iterations):
-            solution = [Point(randrange(self._model.max_x), randrange(self._model.max_y)) for _ in self._dims]
+            solution = [Point(randrange(self._model.max_x), randrange(self._model.max_y)) for _ in range(self._dims)]
             fitness = self._model.get_fitness(solution)
             if fitness > best_fitness:
                 best_fitness = fitness
