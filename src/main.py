@@ -16,9 +16,9 @@ if __name__ == '__main__':
     start = Point(3, 4)  # x, y
     finish = Point(0, 1)
     weight_segement = 1.0
-    weight_turn = 5.0
+    weight_turn = 10.0
 
-    iterations = 100
+    iterations = 1000
     model = Model(terrain_map, n_turns, start, finish, weight_segement, weight_turn)
     # engine = RandomSearch(model)
     engine = SimulatedAnnealing(model)

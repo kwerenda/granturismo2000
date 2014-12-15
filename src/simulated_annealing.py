@@ -5,7 +5,7 @@ from src.model import Point
 
 
 class SimulatedAnnealing(Engine):
-    T0 = 100
+    T0 = 1000
 
     def _temperature(self, x):
         return x * self.T0
@@ -14,8 +14,8 @@ class SimulatedAnnealing(Engine):
         area_x = int((T / self.T0 * self._model.max_x / 2))+1
         area_y = int((T / self.T0 * self._model.max_y / 2))+1
         point_finder = lambda val, area, max_val: min(max(randrange(val - area, val + area), 0), max_val)
-        neighbour = [Point(point_finder(p.x, area_x, self._model.max_x),
-                           point_finder(p.y, area_y, self._model.max_y)) for p in solution]
+        neighbour = [Point(point_finder(p.x, area_x, self._model.max_x-1),
+                           point_finder(p.y, area_y, self._model.max_y-1)) for p in solution]
         return neighbour
 
     @staticmethod
@@ -34,11 +34,12 @@ class SimulatedAnnealing(Engine):
         for it in range(iterations):
             T = self._temperature((iterations - it) / iterations)
             new_solution = self._neighbour(solution, T)
-            new_fitness = self._model.get_fitness(solution)
+            new_fitness = self._model.get_fitness(new_solution)
             if self._good_enough(fitness, new_fitness, T):
                 fitness = new_fitness
                 solution = new_solution
                 if fitness > best_fitness:
+                    print("Poprawa")
                     best_fitness = fitness
                     best_solution = solution
 

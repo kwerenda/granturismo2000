@@ -32,7 +32,7 @@ class Model(object):
         time_turns = 0
         for turn_nr in range(self.n_turns):
             angle = self._angle(segments[turn_nr], segments[turn_nr + 1])
-            time_turns += self.turn_penalty(angle)
+            time_turns += self.turn_penalty(math.pi - angle)
 
         return self.weight_segment*time_segments + self.weight_turn*time_turns
 
@@ -104,7 +104,9 @@ class Model(object):
         if denom == 0:
             return 0
         arg = (a**2 + b**2 - c**2)/denom
-        return math.acos(arg)
+        if -1 <= arg <= 1:
+            return math.acos(arg)
+        return 0
 
     def _segments(self, turns):
         solution = [self.start] + turns + [self.finish]
