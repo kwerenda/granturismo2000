@@ -24,16 +24,17 @@ class Model(object):
         time_segments = 0
         segments = self._segments(turns)
         for segment in segments:
-            dist = Point.dist(segment[0], segment[1])
+            # dist = Point.dist(segment[0], segment[1])
 
-            time_segments += self.weight_segment*dist
+            for tile in self._discrete_line(segment[0], segment[1]):
+                time_segments += self.terrain_map[tile.x][tile.y]
 
         time_turns = 0
         for turn_nr in range(self.n_turns):
             angle = self._angle(segments[turn_nr], segments[turn_nr + 1])
-            time_turns += self.weight_turn*self.turn_penalty(angle)
+            time_turns += self.turn_penalty(angle)
 
-        return time_segments + time_turns
+        return self.weight_segment*time_segments + self.weight_turn*time_turns
 
     @staticmethod
     def _discrete_line(start_point, end_point):
@@ -105,17 +106,10 @@ class Model(object):
         arg = (a**2 + b**2 - c**2)/denom
         return math.acos(arg)
 
-
-
-
     def _segments(self, turns):
         solution = [self.start] + turns + [self.finish]
         return [(solution[i], solution[i+1]) for i in range(self.n_turns + 1)]
-
-
-
     # def get_random_solution(self):
-
 
 class Point:
 
