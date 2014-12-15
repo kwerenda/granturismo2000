@@ -37,12 +37,24 @@ class Model(object):
 
 
     @staticmethod
-    def _angle(seg1, seg2):
-        return 0 #TODO
+    def _angle(segment1, segment2):
+        """Get angle between two segments in radians, in [0, pi]`"""
+        assert(segment1[1] == segment2[0])
+        A = segment1[0]
+        B = segment2[1]
+        P = segment1[1]
+
+        a = Point.dist(A, P)
+        b = Point.dist(P, B)
+        c = Point.dist(A, B)
+
+        denom = 2*a*b
+        if denom == 0:
+            return 0
+        arg = (a**2 + b**2 - c**2)/denom
+        return math.acos(arg)
 
 
-    def _segment_len(self, segment):
-        return math.sqrt(segment())
 
 
     def _segments(self, turns):
