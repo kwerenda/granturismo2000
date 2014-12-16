@@ -38,8 +38,7 @@ class SimulatedAnnealing(Engine):
             if self._good_enough(fitness, new_fitness, T):
                 fitness = new_fitness
                 solution = new_solution
-                if fitness > best_fitness:
-                    print("Poprawa")
+                if fitness < best_fitness:
                     best_fitness = fitness
                     best_solution = solution
 
