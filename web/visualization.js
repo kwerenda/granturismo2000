@@ -1,23 +1,21 @@
-var gameBorder = 400;
-var mapTileSize = 128;
+
 
 map  = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 0, 0],
-    [1, 1, 1, 0, 1],
-    [1, 1, 0, 0, 1],
-    [1, 1, 0, 0, 0]
+    [0, 0, 0, 0, 0, 1],
+    [0, 1, 1, 0, 0, 1 ],
+    [1, 1, 1, 0, 1, 1],
+    [1, 1, 0, 0, 1,1],
+    [1, 1, 0, 0, 0,1]
 ];
 
 start = {x: 3, y:4 };
 end = {x: 0, y:1 };
 
 route1 = [{x:3, y:4}, {x:3, y:1}, {x:2, y:0}, {x:1, y:0}, {x:0, y:1}];
-route = [
-{x:2,y:1},
-{x:2,y:1},
-{x:2,y:1},
-{x:4,y:0}
+route = [{x:3,y:3},
+{x:3,y:2},
+{x:2,y:0},
+{x:1,y:0}
 ]; //512
 route3 = [
 {x:0,y:0},
@@ -30,13 +28,11 @@ route2 = [
 {x:2,y:0},
 {x:4,y:0}];
 
-game = new Phaser.Game(gameBorder, gameBorder, Phaser.CANVAS, 'visualization', {}, true);
 
-game.state.add('animation', {
-    preload: preload,
-    create: create,
-    render: render
-});
+var leadGrid, scaledMapGrid, mapScale;
+var gameBorder = 500;
+var mapTileSize = 128;
+var game, gameWidth, gameHeight;
 
 function preload() {
     //load image which will be used as ground texture
@@ -44,12 +40,12 @@ function preload() {
     game.load.image('dirt', 'assets/dirt.png');
 
     //  This sets a limit on the up-scale
-    game.scale.maxWidth = 500;
-    game.scale.maxHeight = 500;
+    game.scale.maxWidth = gameWidth;
+    game.scale.maxHeight = gameHeight;
 
     //  Then we tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    game.scale.setScreenSize();
+    game.scale.refresh();
 }
 
 function prepareStaticMap() {
@@ -98,9 +94,31 @@ function render() {
 
 function loadGame() {
 //    scale = (gameBorder / $scope.map["border"]) / tileSize;
-    mapScale = (gameBorder / map.length) / mapTileSize;
+
+    var gridWidth = map[0].length;
+    var gridHeight = map.length;
+    var ratio =  gridWidth / gridHeight;
+    if(gridWidth >= gridHeight) {
+        gameWidth = gameBorder;
+        gameHeight = gameBorder/ratio;
+        leadGrid = map[0].length;
+    } else {
+        gameWidth = gameBorder * ratio;
+        gameHeight = gameBorder;
+        leadGrid = map.length;
+    }
+    mapScale = (gameBorder / leadGrid) / mapTileSize;
 //    scaledGrid = tileSize * scale;
     scaledMapGrid = mapScale * mapTileSize;
+
+    game = new Phaser.Game(gameWidth, gameHeight, Phaser.CANVAS, 'visualization', {}, true);
+
+    game.state.add('animation', {
+        preload: preload,
+        create: create,
+        render: render,
+        update: function(){}
+    });
     game.state.start('animation');
 }
 
