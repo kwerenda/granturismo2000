@@ -29,14 +29,14 @@ class TestModel(TestCase):
         self.assertSequenceEqual(model._segments(turns), expected)
 
     def test_discrete_line(self):
-        self.assertSequenceEqual(Model._discrete_line(Point(1, 2), Point(3, 6)),
+        self.assertSequenceEqual(Model.discrete_line(Point(1, 2), Point(3, 6)),
                                  [Point(1, 2), Point(1, 3), Point(2, 3), Point(2, 4), Point(2, 5), Point(3, 5),
                                   Point(3, 6)])
-        self.assertSequenceEqual(Model._discrete_line(Point(1, 1), Point(4, 4)),
+        self.assertSequenceEqual(Model.discrete_line(Point(1, 1), Point(4, 4)),
                                  [Point(1, 1), Point(2, 2), Point(3, 3), Point(4, 4)])
-        self.assertSequenceEqual(Model._discrete_line(Point(1, 1), Point(1, 4)),
+        self.assertSequenceEqual(Model.discrete_line(Point(1, 1), Point(1, 4)),
                                  [Point(1, 1), Point(1, 2), Point(1, 3), Point(1, 4)])
-        self.assertSequenceEqual(Model._discrete_line(Point(1, 4), Point(1, 1)),
+        self.assertSequenceEqual(Model.discrete_line(Point(1, 4), Point(1, 1)),
                                  [Point(1, 4), Point(1, 3), Point(1, 2), Point(1, 1)])
 
 

@@ -26,7 +26,7 @@ class Model(object):
         for segment in segments:
             # dist = Point.dist(segment[0], segment[1])
 
-            for tile in self._discrete_line(segment[0], segment[1]):
+            for tile in self.discrete_line(segment[0], segment[1]):
                 time_segments += self.terrain_map[tile.x][tile.y]
 
         time_turns = 0
@@ -37,7 +37,7 @@ class Model(object):
         return self.weight_segment*time_segments + self.weight_turn*time_turns
 
     @staticmethod
-    def _discrete_line(start_point, end_point):
+    def discrete_line(start_point, end_point):
         """
         vision line algorithm
         :return: list of points creating discrete line

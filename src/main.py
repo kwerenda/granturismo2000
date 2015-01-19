@@ -8,16 +8,16 @@ if __name__ == '__main__':
 
     terrain_map = [
         [0.1, 0.1, 0.1, 0.1, 0.1],
-        [0.1, 1, 1,  0.1, 0.1],
-        [1, 1, 1, 0.1, 1],
-        [1, 1, 0.1, 0.1, 1],
-        [1, 1, 0.1, 0.1, 0.1]
+        [0.1, 1, 0.5,  0.1, 0.1],
+        [0.3, 1, 1, 0.1, 1],
+        [0.7, 1, 0.1, 0.1, 1],
+        [0.7, 0.8, 0.1, 0.1, 0.1]
     ]
-    n_turns = 6
+    n_turns = 5
     start = Point(3, 4)  # x, y
     finish = Point(0, 1)
     weight_segement = 1.0
-    weight_turn = 10.0
+    weight_turn = 15.0
 
     iterations = 1000
     model = Model(terrain_map, n_turns, start, finish, weight_segement, weight_turn)

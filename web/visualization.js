@@ -20,10 +20,15 @@ var leadGrid, scaledMapGrid, mapScale;
 var gameBorder = 500;
 var mapTileSize = 128;
 var game, gameWidth, gameHeight;
+var r=0, g= 56, b=50;
+var r_line = 255, g_line= 80, b_line= 0;
+var r_start = 72, g_start= 204, b_start= 20;
+var r_end= 255, g_end= 7, b_end= 0;
 
 function preload() {
-    game.load.image('road', 'assets/road.png');
-    game.load.image('dirt', 'assets/dirt.png');
+    game.load.image('BlackFrame', 'assets/BlackFrame.png');
+    game.load.image('WhiteFrame', 'assets/WhiteFrame.png');
+    game.load.image('WhiteRectangle', 'assets/WhiteRectangle.png');
 
     game.scale.maxWidth = gameWidth;
     game.scale.maxHeight = gameHeight;
@@ -33,30 +38,54 @@ function preload() {
 }
 
 function prepareStaticMap() {
-    var road = game.add.tileSprite(0, 0, game.width, game.height, 'road');
+
+    //game.stage.backgroundColor = Phaser.Color.createColor(255,255,255);
+
     for(var y=0; y<map.length; y++) {
-        for(var x=0; x<=map[y].length; x++) {
-            if(map[y][x]==1) {
-                var obs = game.add.sprite(x * scaledMapGrid, y * scaledMapGrid, 'dirt');
-                obs.scale.x = mapScale;
-                obs.scale.y = mapScale;
-            }
+        for(var x=0; x<map[y].length; x++) {
+            var obs = game.add.sprite(x * scaledMapGrid, y * scaledMapGrid, 'WhiteRectangle');
+            obs.scale.x = mapScale;
+            obs.scale.y = mapScale;
+            obs.tint = Phaser.Color.getColor(r, g, b);
+            obs.alpha = map[y][x];
         }
     }
+
+    //obs = game.add.sprite(start.x * scaledMapGrid, start.y * scaledMapGrid, 'WhiteFrame');
+    //obs.scale.x = mapScale;
+    //obs.scale.y = mapScale;
+    //
+    //obs = game.add.sprite(end.x * scaledMapGrid, end.y * scaledMapGrid, 'WhiteFrame');
+    //obs.scale.x = mapScale;
+    //obs.scale.y = mapScale;
+
+
 }
 
 function drawRoute() {
     if(route.length>0) {
-        game.context.strokeStyle = 'rgb(30,90,30)';
+        var graphics = game.add.graphics(0, 0);
+        game.context.strokeStyle = 'rgb(' + r_line + ',' + g_line + ',' + b_line + ')';
         game.context.lineWidth = 8;
         game.context.beginPath();
         game.context.moveTo(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2);
         for (var vert = 1; vert < route.length; vert++) {
-            game.context.lineTo(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2)
+            game.context.lineTo(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2);
+            graphics.lineStyle(0, 0xFFFFFF);
+            graphics.beginFill(Phaser.Color.getColor(r_line, g_line, b_line), 1);
+            graphics.drawCircle(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+            graphics.endFill();
         }
         game.context.lineTo(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2);
         game.context.stroke();
         game.context.closePath();
+
+        graphics.beginFill(Phaser.Color.getColor(r_start, g_start, b_start), 1);
+        graphics.drawCircle(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+        graphics.endFill();
+        graphics.beginFill(Phaser.Color.getColor(r_end, g_end, b_end), 1);
+        graphics.drawCircle(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+        graphics.endFill();
     }
 }
 
