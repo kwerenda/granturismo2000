@@ -24,6 +24,7 @@ var r=0, g= 56, b=50;
 var r_line = 255, g_line= 80, b_line= 0;
 var r_start = 72, g_start= 204, b_start= 20;
 var r_end= 255, g_end= 7, b_end= 0;
+var r_rect = 97, g_rect =  31, b_rect = 0;
 
 function preload() {
     game.load.image('BlackFrame', 'assets/BlackFrame.png');
@@ -50,7 +51,14 @@ function prepareStaticMap() {
             obs.alpha = map[y][x];
         }
     }
-
+    var graphics = game.add.graphics(0, 0);
+    graphics.lineStyle(0, 0xFFFFFF);
+    graphics.beginFill(Phaser.Color.getColor(r_start, g_start, b_start), 1);
+    graphics.drawCircle(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+    graphics.endFill();
+    graphics.beginFill(Phaser.Color.getColor(r_end, g_end, b_end), 1);
+    graphics.drawCircle(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+    graphics.endFill();
     //obs = game.add.sprite(start.x * scaledMapGrid, start.y * scaledMapGrid, 'WhiteFrame');
     //obs.scale.x = mapScale;
     //obs.scale.y = mapScale;
@@ -58,6 +66,13 @@ function prepareStaticMap() {
     //obs = game.add.sprite(end.x * scaledMapGrid, end.y * scaledMapGrid, 'WhiteFrame');
     //obs.scale.x = mapScale;
     //obs.scale.y = mapScale;
+
+
+    for (var vert = 0; vert < discrete_route.length; vert++) {
+        obs = game.add.sprite(discrete_route[vert].x * scaledMapGrid, discrete_route[vert].y * scaledMapGrid, 'BlackFrame');
+        obs.scale.x = mapScale;
+        obs.scale.y = mapScale;
+    }
 
 
 }
@@ -69,7 +84,7 @@ function drawRoute() {
         game.context.lineWidth = 8;
         game.context.beginPath();
         game.context.moveTo(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2);
-        for (var vert = 1; vert < route.length; vert++) {
+        for (var vert = 0; vert < route.length; vert++) {
             game.context.lineTo(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2);
             graphics.lineStyle(0, 0xFFFFFF);
             graphics.beginFill(Phaser.Color.getColor(r_line, g_line, b_line), 1);
@@ -80,12 +95,6 @@ function drawRoute() {
         game.context.stroke();
         game.context.closePath();
 
-        graphics.beginFill(Phaser.Color.getColor(r_start, g_start, b_start), 1);
-        graphics.drawCircle(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
-        graphics.endFill();
-        graphics.beginFill(Phaser.Color.getColor(r_end, g_end, b_end), 1);
-        graphics.drawCircle(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
-        graphics.endFill();
     }
 }
 
