@@ -17,7 +17,7 @@ route2 = [
 
 
 var leadGrid, scaledMapGrid, mapScale;
-var gameBorder = 500;
+var gameBorder = 700;
 var mapTileSize = 128;
 var game, gameWidth, gameHeight;
 var r=0, g= 56, b=50;
@@ -52,12 +52,13 @@ function prepareStaticMap() {
         }
     }
     var graphics = game.add.graphics(0, 0);
+    var circleRadius = mapScale >= 0.1 ? 15: 10;
     graphics.lineStyle(0, 0xFFFFFF);
     graphics.beginFill(Phaser.Color.getColor(r_start, g_start, b_start), 1);
-    graphics.drawCircle(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+    graphics.drawCircle(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2, circleRadius);
     graphics.endFill();
     graphics.beginFill(Phaser.Color.getColor(r_end, g_end, b_end), 1);
-    graphics.drawCircle(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+    graphics.drawCircle(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2, circleRadius);
     graphics.endFill();
     //obs = game.add.sprite(start.x * scaledMapGrid, start.y * scaledMapGrid, 'WhiteFrame');
     //obs.scale.x = mapScale;
@@ -74,36 +75,30 @@ function prepareStaticMap() {
         obs.scale.y = mapScale;
     }
 
-
+    drawRoute()
 }
 
 function drawRoute() {
     if(route.length>0) {
         var graphics = game.add.graphics(0, 0);
-        game.context.strokeStyle = 'rgb(' + r_line + ',' + g_line + ',' + b_line + ')';
-        game.context.lineWidth = 8;
-        game.context.beginPath();
-        game.context.moveTo(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2);
+        var line_graphics = game.add.graphics(0,0);
+        var lineWidth = mapScale >= 0.1 ? 8 : 4;
+        var circleRadius = mapScale >= 0.1 ? 15: 10;
+        line_graphics.lineStyle(lineWidth, Phaser.Color.getColor(r_line, g_line, b_line), 1);
+        line_graphics.moveTo(start.x*scaledMapGrid + scaledMapGrid/2, start.y*scaledMapGrid + scaledMapGrid/2);
         for (var vert = 0; vert < route.length; vert++) {
-            game.context.lineTo(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2);
+            line_graphics.lineTo(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2);
             graphics.lineStyle(0, 0xFFFFFF);
             graphics.beginFill(Phaser.Color.getColor(r_line, g_line, b_line), 1);
-            graphics.drawCircle(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2, 20*mapScale);
+            graphics.drawCircle(route[vert].x*scaledMapGrid + scaledMapGrid/2, route[vert].y*scaledMapGrid + scaledMapGrid/2, circleRadius);
             graphics.endFill();
         }
-        game.context.lineTo(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2);
-        game.context.stroke();
-        game.context.closePath();
-
+        line_graphics.lineTo(end.x*scaledMapGrid + scaledMapGrid/2, end.y*scaledMapGrid + scaledMapGrid/2);
     }
 }
 
 function create() {
     prepareStaticMap();
-}
-
-function render() {
-    drawRoute();
 }
 
 function loadGame() {
@@ -129,9 +124,7 @@ function loadGame() {
 
     game.state.add('animation', {
         preload: preload,
-        create: create,
-        render: render,
-        update: function(){}
+        create: create
     });
     game.state.start('animation');
 }
