@@ -8,24 +8,24 @@ from random import randint
 BASE_WEIGHT = 0.1
 MAP_HEIGHT = 30
 MAP_WIDTH = 30
-START = Point(0, 20)
-FINISH = Point(29, 4)
+START = Point(0, MAP_HEIGHT-5)
+FINISH = Point(MAP_WIDTH-1, 4)
 
 WEIGHT_SEGMENT = 2.0
-WEIGHT_TURN = 10.0
+WEIGHT_TURN = 14.0
 N_TURNS = 5
 ITERATIONS = 1000
 
-N_HILLS = 10
+N_HILLS = 50
 
 
 def add_point_if_possible(terrain, width, height, mid_x, mid_y, x, y):
     if 0 <= x < width and 0 <= y < height:
         if x != mid_x or y != mid_y:
-            if terrain[x][y] == BASE_WEIGHT:
+            if terrain[x][y] <= BASE_WEIGHT:
                 terrain[x][y] = 1 / (abs(mid_x - x) + abs(mid_y - y))
             else:
-                terrain[x][y] = min(1, (terrain[x][y] + 1 / (abs(mid_x - x) + abs(mid_y - y)))/2)
+                terrain[x][y] = min(1, (terrain[x][y] + 1 / (abs(mid_x - x) + abs(mid_y - y)))/1.5)
 
 
 def generate_hill_map(width, height, n_points, min_radius=5, max_radius=8):
@@ -77,6 +77,7 @@ if __name__ == '__main__':
     # ]
 
     terrain_map = generate_hill_map(MAP_WIDTH, MAP_HEIGHT, N_HILLS)
+
     model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN)  # engine = RandomSearch(model)
     engine = SimulatedAnnealing(model)
     fitness, solution = engine.solve(ITERATIONS)
