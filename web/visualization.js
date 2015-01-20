@@ -42,13 +42,13 @@ function prepareStaticMap() {
 
     //game.stage.backgroundColor = Phaser.Color.createColor(255,255,255);
 
-    for(var y=0; y<map.length; y++) {
-        for(var x=0; x<map[y].length; x++) {
+    for(var x=0; x<map.length; x++) {
+        for(var y=0; y<map[x].length; y++) {
             var obs = game.add.sprite(x * scaledMapGrid, y * scaledMapGrid, 'WhiteRectangle');
             obs.scale.x = mapScale;
             obs.scale.y = mapScale;
             obs.tint = Phaser.Color.getColor(r, g, b);
-            obs.alpha = map[y][x];
+            obs.alpha = map[x][y];
         }
     }
     var graphics = game.add.graphics(0, 0);
@@ -109,17 +109,17 @@ function render() {
 function loadGame() {
 //    scale = (gameBorder / $scope.map["border"]) / tileSize;
 
-    var gridWidth = map[0].length;
-    var gridHeight = map.length;
+    var gridWidth = map.length;
+    var gridHeight = map[0].length;
     var ratio =  gridWidth / gridHeight;
     if(gridWidth >= gridHeight) {
         gameWidth = gameBorder;
         gameHeight = gameBorder/ratio;
-        leadGrid = map[0].length;
+        leadGrid = map.length;
     } else {
         gameWidth = gameBorder * ratio;
         gameHeight = gameBorder;
-        leadGrid = map.length;
+        leadGrid = map[0].length;
     }
     mapScale = (gameBorder / leadGrid) / mapTileSize;
 //    scaledGrid = tileSize * scale;
