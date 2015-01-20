@@ -128,6 +128,25 @@ class Point:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return self + (-1)*other
+
+    def __mul__(self, other):
+        try:
+            return Point(self.x*other.x, self.y*other.x)        # point, but actually vector
+        except AttributeError:
+            try:
+                return Point(self.x*other[0], self.y*other[1])  # vector
+            except TypeError:
+                return Point(self.x*other, self.y*other)        # scalar
+
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     @staticmethod
     def dist(p1, p2):
         return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)

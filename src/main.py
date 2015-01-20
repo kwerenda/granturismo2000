@@ -1,6 +1,7 @@
 from src.model import Model, Point
 from src.random_search import RandomSearch
 from src.simulated_annealing import SimulatedAnnealing
+from src.particle_swarm import ParticleSwarm
 from pprint import pprint
 import json
 
@@ -24,6 +25,7 @@ if __name__ == '__main__':
     model = Model(terrain_map, n_turns, start, finish, weight_segement, weight_turn)
     # engine = RandomSearch(model)
     engine = SimulatedAnnealing(model)
+    # engine = ParticleSwarm(model)
     fitness, solution = engine.solve(iterations)
     print("Fitness: {0}".format(fitness))
     print("Solution:\n{}".format("\n".join([str(x) for x in solution])))
