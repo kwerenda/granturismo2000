@@ -11,8 +11,8 @@ class SimulatedAnnealing(Engine):
         return x * self.T0
 
     def _neighbour(self, solution, T):
-        area_x = int((T / self.T0 * self._model.max_x / 2))+1
-        area_y = int((T / self.T0 * self._model.max_y / 2))+1
+        area_x = int((T / self.T0 * self._model.max_x)) + 1
+        area_y = int((T / self.T0 * self._model.max_y)) + 1
         point_finder = lambda val, area, max_val: min(max(randrange(val - area, val + area), 0), max_val)
         neighbour = [Point(point_finder(p.x, area_x, self._model.max_x-1),
                            point_finder(p.y, area_y, self._model.max_y-1)) for p in solution]
