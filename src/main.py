@@ -34,12 +34,8 @@ if __name__ == '__main__':
 
     model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN)  # engine = RandomSearch(model)
     engine = SimulatedAnnealing(model)
-<<<<<<< HEAD
     # engine = ParticleSwarm(model)
-    fitness, solution = engine.solve(iterations)
-=======
     fitness, solution = engine.solve(ITERATIONS)
->>>>>>> 44a1b1c361321b4e2e605a388d78ffae36c3276c
     print("Fitness: {0}".format(fitness))
     print("Solution:\n{}".format("\n".join([str(x) for x in solution])))
     json_solution = json.dumps([{"x": p.x, "y": p.y} for p in solution])
