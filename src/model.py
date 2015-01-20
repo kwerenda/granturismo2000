@@ -1,4 +1,5 @@
 import math
+from random import randrange
 
 
 class Model(object):
@@ -15,17 +16,12 @@ class Model(object):
         self.turn_penalty = turn_penalty
 
     def get_fitness(self, turns):
-
-        # solution = [self.start] + turns + [self.finish]
-        # segments = [(solution[i], solution[i+1]) for i in range(self.n_turns + 1)]
-
         time_segments = 0
         segments = self._segments(turns)
         tiles = []
         for segment in segments:
-            # dist = Point.dist(segment[0], segment[1])
             for tile in self.discrete_line(segment[0], segment[1]):
-                if not tiles or tiles[-1].x != tile.x and tiles[-1].y != tile.y:
+                if not tiles or tiles[-1] != tile:
                     tiles.append(tile)
 
         for tile in tiles:
@@ -33,8 +29,7 @@ class Model(object):
 
         time_turns = 0
         for turn_nr in range(self.n_turns):
-            angle = self._angle(segments[turn_nr], segments[turn_nr + 1])
-            time_turns += self.turn_penalty(math.pi - angle)
+            time_turns += self._calculate_turn_penalty(segments[turn_nr], segments[turn_nr + 1])
 
         return self.weight_segment * time_segments + self.weight_turn * time_turns
 
@@ -90,6 +85,10 @@ class Model(object):
                 errorprev = error
         return result
 
+    def _calculate_turn_penalty(self, segment1, segment2):
+        angle = self._angle(segment1, segment2)
+        return self.turn_penalty(math.pi - angle)
+
     @staticmethod
     def _angle(segment1, segment2):
         """Get angle between two segments in radians, in [0, pi]`"""
@@ -113,18 +112,27 @@ class Model(object):
     def _segments(self, turns):
         solution = [self.start] + turns + [self.finish]
         return [(solution[i], solution[i + 1]) for i in range(self.n_turns + 1)]
-        # def get_random_solution(self):
 
 
 class Point:
+    def __repr__(self):
+        return "({}, {})".format(self.x, self.y)
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     @staticmethod
     def dist(p1, p2):
         return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
 
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
+    @staticmethod
+    def create_random(max_x, max_y):
+        return Point(randrange(max_x), randrange(max_y))
 

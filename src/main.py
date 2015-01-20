@@ -1,6 +1,7 @@
 from src.model import Model, Point
 from src.random_search import RandomSearch
 from src.simulated_annealing import SimulatedAnnealing
+from pprint import pprint
 import json
 
 
@@ -23,14 +24,15 @@ if __name__ == '__main__':
     model = Model(terrain_map, n_turns, start, finish, weight_segement, weight_turn)
     # engine = RandomSearch(model)
     engine = SimulatedAnnealing(model)
-    solution = engine.solve(iterations)
-    print("Fitness: {0}".format([solution[0]]))
-    json_solution = json.dumps([{"x": p.x, "y": p.y} for p in solution[1]])
+    fitness, solution = engine.solve(iterations)
+    print("Fitness: {0}".format(fitness))
+    print("Solution:\n{}".format("\n".join([str(x) for x in solution])))
+    json_solution = json.dumps([{"x": p.x, "y": p.y} for p in solution])
     json_map = json.dumps(terrain_map)
-    discrete_solution = model.discrete_line(start, solution[1][0])
-    discrete_solution.extend(model.discrete_line(solution[1][-1], finish))
-    for i in range(len(solution[1])-1):
-        discrete_solution.extend(model.discrete_line(solution[1][i], solution[1][i+1]))
+    discrete_solution = model.discrete_line(start, solution[0])
+    discrete_solution.extend(model.discrete_line(solution[-1], finish))
+    for i in range(len(solution)-1):
+        discrete_solution.extend(model.discrete_line(solution[i], solution[i+1]))
     json_discrete_solution = json.dumps([{"x": p.x, "y": p.y} for p in discrete_solution])
     with open("../web/map.js", "w+") as output_data:
         output_data.write("map = {0};\n".format(json_map))

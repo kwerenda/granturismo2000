@@ -39,8 +39,6 @@ class TestModel(TestCase):
         self.assertSequenceEqual(Model.discrete_line(Point(1, 4), Point(1, 1)),
                                  [Point(1, 4), Point(1, 3), Point(1, 2), Point(1, 1)])
 
-
-
     def test_fitness(self):
         terrain_map = [
             [0.1, 0.1, 0.1, 0.1, 0.1],
@@ -60,7 +58,34 @@ class TestModel(TestCase):
         fitness = model.get_fitness(turns)
 
         # self.assertAlmostEqual(fitness, 6 + math.sqrt(2))
-        self.assertEqual(fitness, 0.4) #TODO wyliczyc co tu powinno
+        self.assertAlmostEqual(fitness, 4.4) #TODO wyliczyc co tu powinno
+
+
+    def test_angle_metric_order(self):
+        """Test that the closer the angle is to straight line, the smaller it costs is"""
+        terrain_map = [[1]*6 for _ in range(7)]
+        A = Point(0, 0)
+        B = Point(1, 2)
+        C = Point(3, 4)
+        D = Point(2, 1)
+        E = Point(3, 5)
+        F = Point(0, 3)
+        model = Model(terrain_map, None, None, None, None, None,
+                      turn_penalty=lambda x: x**2)
+        gentle_angle_weight = model._calculate_turn_penalty([A, B], [B, C])
+        harsh_angle_weight = model._calculate_turn_penalty([A, B], [B, D])
+        self.assertLess(gentle_angle_weight, harsh_angle_weight)
+
+        zero_angle_weight = model._calculate_turn_penalty([A, B], [B, A])
+        self.assertLess(harsh_angle_weight, zero_angle_weight)
+
+        straight_angle_weight = model._calculate_turn_penalty([A, B], [B, E])
+        self.assertLess(straight_angle_weight, gentle_angle_weight)
+
+        medium_angle_weight = model._calculate_turn_penalty([A, B], [B, F])
+        self.assertLess(medium_angle_weight, harsh_angle_weight)
+
+
 
 
     def test_dist(self):
