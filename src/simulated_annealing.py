@@ -5,10 +5,16 @@ from src.model import Point
 
 
 class SimulatedAnnealing(Engine):
-    T0 = 1000
 
-    def _temperature(self, x):
-        return x * self.T0
+    def __init__(self, model, initial_temperature=1000, temperature_function=lambda init, param: init*param):
+        super(SimulatedAnnealing, self).__init__(model)
+        self._temperature_function = temperature_function
+        self.T0 = initial_temperature
+
+    @staticmethod
+    def _good_enough(fitness, new_fitness, T):
+        dFitness = new_fitness - fitness
+        return (dFitness >= 0.0 and math.exp(-dFitness / T) < random()) or dFitness < 0.0
 
     def _neighbour(self, solution, T):
         area_x = int((T / self.T0 * self._model.max_x)) + 1
@@ -17,11 +23,6 @@ class SimulatedAnnealing(Engine):
         neighbour = [Point(point_finder(p.x, area_x, self._model.max_x-1),
                            point_finder(p.y, area_y, self._model.max_y-1)) for p in solution]
         return neighbour
-
-    @staticmethod
-    def _good_enough(fitness, new_fitness, T):
-        dFitness = new_fitness - fitness
-        return (dFitness >= 0.0 and math.exp(-dFitness / T) < random()) or dFitness < 0.0
 
     def step(self):
         pass
@@ -32,7 +33,7 @@ class SimulatedAnnealing(Engine):
         best_solution = solution
         best_fitness = fitness
         for it in range(iterations):
-            T = self._temperature((iterations - it) / iterations)
+            T = self._temperature_function(self.T0, (iterations - it) / iterations)
             new_solution = self._neighbour(solution, T)
             new_fitness = self._model.get_fitness(new_solution)
             if self._good_enough(fitness, new_fitness, T):
