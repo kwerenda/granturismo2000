@@ -1,6 +1,6 @@
 from src.model import Model, Point
 from src.random_search import RandomSearch
-from src.simulated_annealing import SimulatedAnnealing
+from src.simulated_annealing import SimulatedAnnealing, SimulatedAnnealingVariableArea
 from src.particle_swarm import ParticleSwarm
 from pprint import pprint
 import json
@@ -12,7 +12,7 @@ MAP_WIDTH = 30
 START = Point(0, MAP_HEIGHT-5)
 FINISH = Point(MAP_WIDTH-1, 4)
 
-WEIGHT_SEGMENT = 2.0
+WEIGHT_SEGMENT = 20.0
 WEIGHT_TURN = 14.0
 N_TURNS = 5
 ITERATIONS = 1000
@@ -32,8 +32,10 @@ if __name__ == '__main__':
 
     terrain_map = generate_hill_terrain(MAP_WIDTH, MAP_HEIGHT, BASE_WEIGHT, N_HILLS)
 
-    model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN)  # engine = RandomSearch(model)
+    model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN, turn_penalty=lambda x: x**3)
+    # engine = RandomSearch(model)
     engine = SimulatedAnnealing(model)
+    # engine = SimulatedAnnealingVariableArea(model)
     # engine = ParticleSwarm(model)
     fitness, solution = engine.solve(ITERATIONS)
     print("Fitness: {0}".format(fitness))
