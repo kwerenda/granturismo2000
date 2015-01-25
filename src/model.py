@@ -10,8 +10,10 @@ class Model(object):
         self.n_turns = n_turns
         self.start = start
         self.finish = finish
-        self.max_x = len(terrain_map[0])
-        self.max_y = len(terrain_map)
+        self.min_x = 0
+        self.min_y = 0
+        self.max_x = len(terrain_map[0]) - 1
+        self.max_y = len(terrain_map) - 1
         self.weight_segment = weight_segment
         self.weight_turn = weight_turn
         self.turn_penalty = turn_penalty
@@ -142,7 +144,7 @@ class Point:
 
     def __mul__(self, other):
         try:
-            return Point(self.x*other.x, self.y*other.x)        # point, but actually vector
+            return Point(self.x*other.x, self.y*other.y)        # point, but actually vector
         except AttributeError:
             try:
                 return Point(self.x*other[0], self.y*other[1])  # vector

@@ -80,24 +80,9 @@ def run_test(model, scribe, engine):
     return fitness, solution
 
 
-if __name__ == '__main__':
-
-    terrain_map = generate_hill_terrain(MAP_WIDTH, MAP_HEIGHT, BASE_WEIGHT, N_HILLS, MIN_RADIUS, MAX_RADIUS)
-    # terrain_map = terrain_map_1
-    model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN, turn_penalty=lambda x: x**3)
-    # engine = RandomSearch(model)
-    # engine = SimulatedAnnealing(model)
-    # engine = SimulatedAnnealingVariableArea(model)
-    # engine = ParticleSwarm(model)
-
-    # scribe = ScribeInMemory(engine)
-
-    # fitness, solution = engine.solve(ITERATIONS)
-    fitness, solution = test_annealing(model, ScribeInMemoryFitness())
-
+def print_solution(fitness, solution, terrain_map):
     print("Fitness: {0}".format(fitness))
     print("Solution:\n{}".format("\n".join([str(x) for x in solution])))
-
     json_solution = json.dumps([{"x": p.x, "y": p.y} for p in solution])
     json_map = json.dumps(terrain_map)
     discrete_solution = model.discrete_line(START, solution[0])
@@ -112,5 +97,21 @@ if __name__ == '__main__':
         output_data.write("route = {0};\n".format(json_solution))
         output_data.write("discrete_route = {0};\n".format(json_discrete_solution))
 
+
+if __name__ == '__main__':
+
+    terrain_map = generate_hill_terrain(MAP_WIDTH, MAP_HEIGHT, BASE_WEIGHT, N_HILLS, MIN_RADIUS, MAX_RADIUS)
+    # terrain_map = terrain_map_1
+    model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN, turn_penalty=lambda x: x**3)
+    # engine = RandomSearch(model)
+    # engine = SimulatedAnnealing(model)
+    # engine = SimulatedAnnealingVariableArea(model)
+    # engine = ParticleSwarm(model)
+
+    # scribe = ScribeInMemory(engine)
+
+    # fitness, solution = engine.solve(ITERATIONS)
+    fitness, solution = test_annealing(model, ScribeInMemoryFitness())
+    print_solution(fitness, solution, terrain_map)
     pyplot.show()
 

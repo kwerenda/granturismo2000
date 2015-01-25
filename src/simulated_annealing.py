@@ -16,6 +16,7 @@ class SimulatedAnnealing(Engine):
     @staticmethod
     def _good_enough(fitness, new_fitness, T):
         dFitness = new_fitness - fitness
+        T = 1 if T < 1 else T
         if math.exp(-dFitness / T) >= random():
             # print("Worse, but take T:{0}, exp: {1}, dFitness:{2}".format(T, math.exp(-dFitness / T), dFitness))
             return True
@@ -29,8 +30,8 @@ class SimulatedAnnealing(Engine):
         area_x = self._model.max_x // 10 + 1
         area_y = self._model.max_y // 10 + 1
         point_finder = lambda val, area, max_val: min(max(randrange(val - area, val + area), 0), max_val)
-        neighbour = [Point(point_finder(p.x, area_x, self._model.max_x-1),
-                           point_finder(p.y, area_y, self._model.max_y-1)) for p in solution]
+        neighbour = [Point(point_finder(p.x, area_x, self._model.max_x),
+                           point_finder(p.y, area_y, self._model.max_y)) for p in solution]
         return neighbour
 
     def solve(self, iterations):
@@ -61,6 +62,6 @@ class SimulatedAnnealingVariableArea(SimulatedAnnealing):
         area_x = int((self.T / self.T0 * self._model.max_x)) + 1
         area_y = int((self.T / self.T0 * self._model.max_y)) + 1
         point_finder = lambda val, area, max_val: min(max(randrange(val - area, val + area), 0), max_val)
-        neighbour = [Point(point_finder(p.x, area_x, self._model.max_x-1),
-                           point_finder(p.y, area_y, self._model.max_y-1)) for p in solution]
+        neighbour = [Point(point_finder(p.x, area_x, self._model.max_x),
+                           point_finder(p.y, area_y, self._model.max_y)) for p in solution]
         return neighbour
