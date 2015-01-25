@@ -1,5 +1,6 @@
 import math
 from random import randrange
+from src.scribe import ScribeEmpty
 
 
 class Model(object):
@@ -14,6 +15,10 @@ class Model(object):
         self.weight_segment = weight_segment
         self.weight_turn = weight_turn
         self.turn_penalty = turn_penalty
+        self.scribe = ScribeEmpty()
+
+    def set_scribe(self, scribe):
+        self.scribe = scribe
 
     def get_fitness(self, turns):
         time_segments = 0
@@ -30,8 +35,9 @@ class Model(object):
         time_turns = 0
         for turn_nr in range(self.n_turns):
             time_turns += self._calculate_turn_penalty(segments[turn_nr], segments[turn_nr + 1])
-
-        return self.weight_segment * time_segments + self.weight_turn * time_turns
+        fitness = self.weight_segment * time_segments + self.weight_turn * time_turns
+        self.scribe.increment_evaluation()
+        return fitness
 
     @staticmethod
     def discrete_line(start_point, end_point):

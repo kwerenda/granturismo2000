@@ -65,6 +65,9 @@ class ParticleSwarm(Engine):
                         self._global_best_solution = particle.solution
                         self._global_best_fitness = particle.fitness
 
+    def get_best_fitness(self):
+        return self._global_best_fitness
+
 
 class Particle(object):
     """Each particle in a swarm holds n-dimensional position and velocity in solutions space"""

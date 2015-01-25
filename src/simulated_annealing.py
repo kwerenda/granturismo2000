@@ -11,6 +11,7 @@ class SimulatedAnnealing(Engine):
         self._temperature_function = temperature_function
         self.T0 = initial_temperature
         self.T = self.T0
+        self.fitness = 0
 
     @staticmethod
     def _good_enough(fitness, new_fitness, T):
@@ -34,21 +35,24 @@ class SimulatedAnnealing(Engine):
 
     def solve(self, iterations):
         solution = [Point(randrange(self._model.max_x), randrange(self._model.max_y)) for _ in range(self._dims)]
-        fitness = self._model.get_fitness(solution)
+        self.fitness = self._model.get_fitness(solution)
         best_solution = solution
-        best_fitness = fitness
+        self._best_fitness = self.fitness
         for it in range(iterations):
             self.T = self._temperature_function(self.T0, (iterations - it) / iterations)
             new_solution = self._neighbour(solution)
             new_fitness = self._model.get_fitness(new_solution)
-            if self._good_enough(fitness, new_fitness, self.T):
-                fitness = new_fitness
+            if self._good_enough(self.fitness, new_fitness, self.T):
+                self.fitness = new_fitness
                 solution = new_solution
-                if fitness < best_fitness:
-                    best_fitness = fitness
+                if self.fitness < self._best_fitness:
+                    self._best_fitness = self.fitness
                     best_solution = solution
 
-        return best_fitness, best_solution
+        return self._best_fitness, best_solution
+
+    def get_fitness(self):
+        return self.fitness
 
 
 class SimulatedAnnealingVariableArea(SimulatedAnnealing):
