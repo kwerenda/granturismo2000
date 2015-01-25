@@ -16,21 +16,21 @@ FINISH = Point(MAP_WIDTH-1, 4)
 
 WEIGHT_SEGMENT = 20.0
 WEIGHT_TURN = 14.0
-N_TURNS = 10
-ITERATIONS = 10000
+N_TURNS = 4
+ITERATIONS = 1000
 
-EXPERIMENTS = 10
+EXPERIMENTS = 3
 
-N_HILLS = 10
+N_HILLS = 8
 MIN_RADIUS = 10
 MAX_RADIUS = 20
 
 
 def test_annealing(model, scribe):
 
-    fitness, solution, best_fitness_array_var, fitness_array_var = run_experiments(model, scribe, SimulatedAnnealingVariableArea(model, temperature_function=lambda temp, param: temp*param**2),
+    fitness, solution, best_fitness_array_var, fitness_array_var = run_experiments(model, scribe, SimulatedAnnealingVariableArea(model, temperature_function=lambda temp, param: temp*param),
                                                                                    EXPERIMENTS, True)
-    fitness, solution, best_fitness_array, fitness_array = run_experiments(model, scribe, SimulatedAnnealing(model, temperature_function=lambda temp, param: temp*param**2),
+    fitness, solution, best_fitness_array, fitness_array = run_experiments(model, scribe, SimulatedAnnealing(model, temperature_function=lambda temp, param: temp*param),
                                                                            EXPERIMENTS, True)
 
     pyplot.figure()
@@ -58,17 +58,20 @@ def run_experiments(model, scribe, engine, number_of_experiments, with_fitness=F
 
     best_fitness_arrays = []
     fitness_arrays = []
-    fitness = float("inf")
-    solution = []
+    best_fit = float("inf")
+    best_sol = []
     for i in range(number_of_experiments):
         fitness, solution = run_test(model, scribe, engine)
+        if best_fit > fitness:
+            best_fit = fitness
+            best_sol = solution
         best_fitness_arrays.append(scribe.get_best_fitness())
         if with_fitness:
             fitness_arrays.append(scribe.get_fitness())
 
     best_fitness_array = [sum(e)/len(e) for e in zip(*best_fitness_arrays)]
     fitness_array = [sum(e)/len(e) for e in zip(*fitness_arrays)]
-    return fitness, solution, best_fitness_array, fitness_array
+    return best_fit, best_sol, best_fitness_array, fitness_array
 
 
 def run_test(model, scribe, engine):
@@ -111,7 +114,7 @@ if __name__ == '__main__':
     # scribe = ScribeInMemory(engine)
 
     # fitness, solution = engine.solve(ITERATIONS)
-    fitness, solution = test_annealing(model, ScribeInMemoryFitness())
+    fitness, solution = test_annealing(model, ScribeInMemoryFitness(period=1))
     print_solution(fitness, solution, terrain_map)
     pyplot.show()
 

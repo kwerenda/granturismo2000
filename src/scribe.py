@@ -16,7 +16,7 @@ class ScribeEmpty(object):
         self.evaluation += 1
 
     def is_enough_evaluations(self):
-        return self.evaluation % self.period == 1
+        return self.evaluation % self.period == 1 or self.period == 1
 
     def set_period(self, period):
         if period < 1:
