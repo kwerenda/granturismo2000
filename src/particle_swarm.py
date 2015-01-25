@@ -1,7 +1,7 @@
 from src.engine import Engine
 from src.model import Point
 
-from random import randrange, random
+from random import random
 
 
 class ParticleSwarm(Engine):
@@ -21,7 +21,9 @@ class ParticleSwarm(Engine):
     def step(self):
         pass
 
-    def solve(self, iterations):
+    def solve(self, iterations, divide_by_swarm_size=True):
+        if divide_by_swarm_size:
+            iterations //= self.swarm_size
         self._initialize()
 
         for it in range(iterations):
