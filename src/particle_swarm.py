@@ -6,17 +6,20 @@ from random import random
 
 class ParticleSwarm(Engine):
 
-    def __init__(self, model, swarm_size=1000, inertia=0.729, c_personal=1.49, c_social=1.49):
+    def __init__(self, model, swarm_size=100, inertia=0.729, c_personal=1.49, c_social=1.49, inertion_cooling=False,
+                 min_inertia=0.4, cooling_step=10):
         super().__init__(model)
         self.swarm_size = swarm_size
         self.inertia = inertia
         self.c_personal = c_personal
         self.c_social = c_social
-
         self._global_best_fitness = float('inf')
         self._global_best_solution = []
         self.max_v = Point(self._model.max_x, self._model.max_y)
         self.min_v = Point(-self._model.max_x, -self._model.max_y)
+        self.inertion_cooling = inertion_cooling
+        self.min_inertia = min_inertia
+        self.cooling_step = cooling_step
 
     def step(self):
         pass
@@ -24,9 +27,15 @@ class ParticleSwarm(Engine):
     def solve(self, iterations, divide_by_swarm_size=True):
         if divide_by_swarm_size:
             iterations //= self.swarm_size
+            iterations += 1
         self._initialize()
 
         for it in range(iterations):
+            print("Iteracja {}".format(it))
+            if self.inertion_cooling and it % self.cooling_step == 0:
+                self.inertia -= 0.1
+                self.inertia = max(self.inertia, self.min_inertia)
+
             for particle in self._particles:
                 particle.velocity = [self._new_velocity(particle, dim) for dim in range(self._dims)]
                 # particle.solution = [s + v for s, v in zip(particle.solution, particle.velocity)]

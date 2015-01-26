@@ -20,6 +20,8 @@ class RandomSearch(Engine):
 
         return self._best_fitness, best_solution
 
+    def get_best_fitness(self):
+        return self._best_fitness
 
 
 
