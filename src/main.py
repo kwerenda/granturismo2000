@@ -9,21 +9,21 @@ import json
 from src.terrain import *
 
 BASE_WEIGHT = 0.1
-MAP_HEIGHT = 60
-MAP_WIDTH = 60
+MAP_HEIGHT = 90
+MAP_WIDTH = 90
 START = Point(0, MAP_HEIGHT-5)
 FINISH = Point(MAP_WIDTH-1, 4)
 
 WEIGHT_SEGMENT = 20.0
 WEIGHT_TURN = 14.0
-N_TURNS = 4
+N_TURNS = 5
 ITERATIONS = 1000
 
-EXPERIMENTS = 3
+EXPERIMENTS = 10
 
-N_HILLS = 8
-MIN_RADIUS = 10
-MAX_RADIUS = 20
+N_HILLS = 6
+MIN_RADIUS = 6
+MAX_RADIUS = 8
 
 
 def test_annealing(model, scribe):
@@ -103,8 +103,8 @@ def print_solution(fitness, solution, terrain_map):
 
 if __name__ == '__main__':
 
-    terrain_map = generate_hill_terrain(MAP_WIDTH, MAP_HEIGHT, BASE_WEIGHT, N_HILLS, MIN_RADIUS, MAX_RADIUS)
-    # terrain_map = terrain_map_1
+    # terrain_map = generate_hill_terrain(MAP_WIDTH, MAP_HEIGHT, BASE_WEIGHT, N_HILLS, MIN_RADIUS, MAX_RADIUS)
+    terrain_map = terrain_map_3
     model = Model(terrain_map, N_TURNS, START, FINISH, WEIGHT_SEGMENT, WEIGHT_TURN, turn_penalty=lambda x: x**3)
     # engine = RandomSearch(model)
     # engine = SimulatedAnnealing(model)

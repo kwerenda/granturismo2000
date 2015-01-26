@@ -12,8 +12,8 @@ class Model(object):
         self.finish = finish
         self.min_x = 0
         self.min_y = 0
-        self.max_x = len(terrain_map[0]) - 1
-        self.max_y = len(terrain_map) - 1
+        self.max_x = len(terrain_map) - 1
+        self.max_y = len(terrain_map[0]) - 1
         self.weight_segment = weight_segment
         self.weight_turn = weight_turn
         self.turn_penalty = turn_penalty
